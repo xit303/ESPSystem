@@ -24,63 +24,84 @@ protected:
     virtual void Print() {};
 
 public:
-    SettingsBase(const char* name) : ISettingsBase(name) {}
+    SettingsBase(const char *name) : ISettingsBase(name) {}
 
     virtual bool HasChanged() = 0;
 
     virtual bool Init() override
     {
-        if (preferences.begin(name))
+        Serial.print(name);
+        Serial.print(".Init()");
+
+        if (!preferences.begin(name))
         {
-            Serial.printf("Loading settings for %s\n", name);
-            OnInit();
-            preferences.end();
-            return true;    
+            Serial.println(" Preferences.begin() returned false");
+            return false;
         }
-        else
+
+        OnInit();
+        preferences.end();
+        Serial.println(" Done");
+        return true;
+    }
+
+    virtual bool SetDefault() override
+    {
+        Serial.print(name);
+        Serial.print(".SetDefault()");
+
+        if (!preferences.begin(name))
         {
-            Serial.printf("Could not load settings for %s. Preferences.begin() was FALSE\n", name);
+            
+            Serial.println(" Preferences.begin() returned false");
+            return false;
         }
         
-        return false;
+        OnSetDefault();
+        preferences.end();
+        Serial.println(" Done");
+        return true;
     }
 
-    void SetDefault()
+    virtual bool Reload() override
     {
-        if (preferences.begin(name))
+        Serial.print(name);
+        Serial.print(".Reload()");
+
+        if (!preferences.begin(name))
         {
-            OnSetDefault();
-            preferences.end();
+
+            Serial.println(" Preferences.begin() returned false");
+            return false;
         }
+
+        OnReload();
+        preferences.end();
+        Serial.println(" Done");
+        return true;
     }
 
-    void Reload()
+    virtual bool Save(bool forceSave = false) override
     {
-        if (preferences.begin(name))
+        Serial.print(name);
+        Serial.print(".Save()");
+            
+        if (forceSave || HasChanged())
         {
-            OnReload();
-            preferences.end();
-        }
-    }
-
-    void Save()
-    {
-        if (HasChanged())
-        {
-            if (preferences.begin(name))
+            if (!preferences.begin(name))
             {
-                Serial.print(name);
-                Serial.println(" saving...");
-                OnSave();
-                Serial.print(name);
-                Serial.println(" saved");
-            }
-            else
-            {
-                Serial.print(name);
                 Serial.println(" Preferences.begin() returned false");
+                return false;
             }
+
+            OnSave();
+            preferences.end();
+            Serial.println(" Done");
         }
+        else
+            Serial.println(" nothing to save");
+
+        return true;
     }
 
     virtual void Update() override {}
