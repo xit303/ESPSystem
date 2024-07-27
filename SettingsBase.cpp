@@ -13,7 +13,7 @@
 bool SettingsBase::Init()
 {
     Serial.print(Name());
-    Serial.print(".Init()");
+    Serial.println(".Init()");
 
     if (!preferences.begin(Name()))
     {
@@ -23,14 +23,14 @@ bool SettingsBase::Init()
 
     OnInit();
     preferences.end();
-    Serial.println(" Done");
+    Serial.println("Done");
     return true;
 }
 
 bool SettingsBase::SetDefault()
 {
     Serial.print(Name());
-    Serial.print(".SetDefault()");
+    Serial.println(".SetDefault()");
 
     if (!preferences.begin(Name()))
     {
@@ -40,14 +40,14 @@ bool SettingsBase::SetDefault()
 
     OnSetDefault();
     preferences.end();
-    Serial.println(" Done");
+    Serial.println("Done");
     return true;
 }
 
 bool SettingsBase::Reload()
 {
     Serial.print(Name());
-    Serial.print(".Reload()");
+    Serial.println(".Reload()");
 
     if (!preferences.begin(Name()))
     {
@@ -58,14 +58,14 @@ bool SettingsBase::Reload()
 
     OnReload();
     preferences.end();
-    Serial.println(" Done");
+    Serial.println("Done");
     return true;
 }
 
 bool SettingsBase::Save(bool forceSave)
 {
     Serial.print(Name());
-    Serial.print(".Save()");
+    Serial.println(".Save()");
 
     if (forceSave || HasChanged())
     {
@@ -77,10 +77,10 @@ bool SettingsBase::Save(bool forceSave)
 
         OnSave();
         preferences.end();
-        Serial.println(" Done");
+        Serial.println("Done");
     }
     else
-        Serial.println(" nothing to save");
+        Serial.println("nothing to save");
 
     return true;
 }
