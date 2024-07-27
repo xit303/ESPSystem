@@ -12,10 +12,10 @@
 
 bool SettingsBase::Init()
 {
-    Serial.print(name);
+    Serial.print(Name());
     Serial.print(".Init()");
 
-    if (!preferences.begin(name))
+    if (!preferences.begin(Name()))
     {
         Serial.println(" Preferences.begin() returned false");
         return false;
@@ -29,12 +29,11 @@ bool SettingsBase::Init()
 
 bool SettingsBase::SetDefault()
 {
-    Serial.print(name);
+    Serial.print(Name());
     Serial.print(".SetDefault()");
 
-    if (!preferences.begin(name))
+    if (!preferences.begin(Name()))
     {
-
         Serial.println(" Preferences.begin() returned false");
         return false;
     }
@@ -47,10 +46,10 @@ bool SettingsBase::SetDefault()
 
 bool SettingsBase::Reload()
 {
-    Serial.print(name);
+    Serial.print(Name());
     Serial.print(".Reload()");
 
-    if (!preferences.begin(name))
+    if (!preferences.begin(Name()))
     {
 
         Serial.println(" Preferences.begin() returned false");
@@ -65,12 +64,12 @@ bool SettingsBase::Reload()
 
 bool SettingsBase::Save(bool forceSave)
 {
-    Serial.print(name);
+    Serial.print(Name());
     Serial.print(".Save()");
 
     if (forceSave || HasChanged())
     {
-        if (!preferences.begin(name))
+        if (!preferences.begin(Name()))
         {
             Serial.println(" Preferences.begin() returned false");
             return false;
