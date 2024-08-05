@@ -9,25 +9,27 @@
 //******************************************************
 
 WiFiSettings::WiFiSettings(const char *name, bool defaultEnabled, String defaultHostname, String defaultSsid, String defaultPassword)
-    : SettingsBase(name)
+    : SettingsGroup(name)
 {
-    this->defaultEnabled = defaultEnabled;
-    this->defaultHostname = defaultHostname;
-    this->defaultSsid = defaultSsid;
-    this->defaultPassword = defaultPassword;
+    this->enabled.DefaultValue(defaultEnabled);
+    settings.push_back(&this->enabled);
+
+    this->hostname.DefaultValue(defaultHostname),
+    settings.push_back(&this->hostname);
+
+    this->ssid.DefaultValue(defaultSsid);
+    settings.push_back(&this->ssid);
+
+    this->password.DefaultValue(defaultPassword);
+    settings.push_back(&this->password);
 }
 
-bool WiFiSettings::HasChanged()
-{
-    return enabled != loadedEnabled ||
-           hostname != loadedHostname ||
-           ssid != loadedSsid ||
-           password != loadedPassword;
-}
 
 bool WiFiSettings::Valid()
 {
-    if (hostname.isEmpty() || ssid.isEmpty())
+    String host = hostname;
+    String ssi = ssid;
+    if (host.isEmpty() || !ssi.isEmpty())
         return false;
 
     // we do not check the password because it can be empty on an open network
@@ -40,59 +42,53 @@ bool WiFiSettings::Valid()
 
 void WiFiSettings::OnInit()
 {
-    loadedEnabled = enabled = preferences.getBool("enabled", defaultEnabled);
-    loadedHostname = hostname = preferences.getString("hostname", defaultHostname);
-    loadedSsid = ssid = preferences.getString("ssid", defaultSsid);
-    loadedPassword = password = preferences.getString("password", defaultPassword);
+    bool b = preferences.getBool(enabled.Name(), enabled.DefaultValue());
+    enabled.LoadedValue(b);
+    settings.push_back(&enabled);
+
+    String s = preferences.getString(hostname.Name(), hostname.DefaultValue());
+    hostname.LoadedValue(s);
+    settings.push_back(&hostname);
+
+    s = preferences.getString(ssid.Name(), ssid.DefaultValue());
+    ssid.LoadedValue(s);
+    settings.push_back(&ssid);
+
+    s = preferences.getString(password.Name(), password.DefaultValue());
+    password.LoadedValue(s);
+    settings.push_back(&password);
 
     Print();
 }
 
 void WiFiSettings::OnSetDefault()
 {
-    loadedEnabled = enabled = defaultEnabled;
-    loadedHostname = hostname = defaultHostname;
-    loadedSsid = ssid = defaultSsid;
-    loadedPassword = password = defaultPassword;
-
-    preferences.remove("enabled");
-    preferences.remove("hostname");
-    preferences.remove("ssid");
-    preferences.remove("password");
-}
-
-void WiFiSettings::OnReload()
-{
-    enabled = loadedEnabled;
-    hostname = loadedHostname;
-    ssid = loadedSsid;
-    password = loadedPassword;
+    preferences.remove(enabled.Name());
+    preferences.remove(hostname.Name());
+    preferences.remove(ssid.Name());
+    preferences.remove(password.Name());
 }
 
 void WiFiSettings::OnSave()
 {
-    if (enabled != loadedEnabled)
+    if (enabled.HasChanged())
     {
-        loadedEnabled = enabled;
-        preferences.putBool("enabled", enabled);
+        preferences.putBool(enabled.Name(), enabled);
     }
 
-    if (hostname != loadedHostname)
+    if (hostname.HasChanged())
     {
-        loadedHostname = hostname;
-        preferences.putString("hostname", hostname);
+        preferences.putString(hostname.Name(), hostname);
     }
 
-    if (ssid != loadedSsid)
+    if (ssid.HasChanged())
     {
-        loadedSsid = ssid;
-        preferences.putString("ssid", ssid);
+        preferences.putString(ssid.Name(), ssid);
     }
 
-    if (password != loadedPassword)
+    if (password.HasChanged())
     {
-        loadedPassword = password;
-        preferences.putString("password", password);
+        preferences.putString(password.Name(), password);
     }
 
     Print();
