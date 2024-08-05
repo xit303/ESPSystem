@@ -4,13 +4,13 @@
 
 #include <Arduino.h>
 
-#include "SettingsBase.h"
+#include "SettingsGroup.h"
 
 //******************************************************
 // Public Methods
 //******************************************************
 
-bool SettingsBase::Init()
+bool SettingsGroup::Init()
 {
     Serial.print(Name());
     Serial.println(".Init()");
@@ -27,7 +27,7 @@ bool SettingsBase::Init()
     return true;
 }
 
-bool SettingsBase::SetDefault()
+bool SettingsGroup::SetDefault()
 {
     Serial.print(Name());
     Serial.println(".SetDefault()");
@@ -44,25 +44,7 @@ bool SettingsBase::SetDefault()
     return true;
 }
 
-bool SettingsBase::Reload()
-{
-    Serial.print(Name());
-    Serial.println(".Reload()");
-
-    if (!preferences.begin(Name()))
-    {
-
-        Serial.println(" Preferences.begin() returned false");
-        return false;
-    }
-
-    OnReload();
-    preferences.end();
-    Serial.println("Done");
-    return true;
-}
-
-bool SettingsBase::Save(bool forceSave)
+bool SettingsGroup::Save(bool forceSave)
 {
     Serial.print(Name());
     Serial.println(".Save()");
@@ -76,6 +58,7 @@ bool SettingsBase::Save(bool forceSave)
         }
 
         OnSave();
+        ISettingsGroup::Save();
         preferences.end();
         Serial.println("Done");
     }

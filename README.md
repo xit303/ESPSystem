@@ -4,18 +4,18 @@ This is the System implementation for ESP32 and ESP8266 with Arduino.
 
 It contains the basic classes which inherit from the [Interfaces](https://github.com/xit303/Interfaces.git) repository.
 
-`SettingsBase` is the implementation of the `ISettingsBase` interface. It uses the ESP32 `Preferences` class to store system settings. `SettingsBase` only overrides the `Init`, `SetDefault`, `Reload` and `Save` methods, so that we don't need to take care of calling `Preferences.begin()` and `Preferences.end()`.
+`SettingsGroup` is the implementation of the `ISettingsBase` interface. It uses the ESP32 `Preferences` class to store system settings. `SettingsGroup` only overrides the `Init`, `SetDefault`, `Reload` and `Save` methods, so that we don't need to take care of calling `Preferences.begin()` and `Preferences.end()`.
 
-`OnInit`, `OnSetDefault`, `OnReload`, `OnSave` and `HasChanged` have to be overwritten by all classes which inherit form `SettingsBase`.
+`OnInit`, `OnSetDefault`, `OnReload`, `OnSave` and `HasChanged` have to be overwritten by all classes which inherit form `SettingsGroup`.
 
 Here is a short implementation example. Please note that this is not the full implementation of the WiFiSettings class, which can be found in the future in a different repository.
 
 WiFiSettings.h
 
 ```
-#include "SettingsBase.h"
+#include "SettingsGroup.h"
 
-class WiFiSettings : public SettingsBase
+class WiFiSettings : public SettingsGroup
 {
 private:
     bool enabled;
@@ -50,7 +50,7 @@ WiFiSettings.cpp
 //******************************************************
 
 WiFiSettings::WiFiSettings(const char *name, bool defaultEnabled)
-    : SettingsBase(name)
+    : SettingsGroup(name)
 {
     this->defaultEnabled = defaultEnabled;
 }

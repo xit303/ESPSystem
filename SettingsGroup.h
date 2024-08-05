@@ -5,31 +5,28 @@
 //******************************************************
 
 #include <Preferences.h>
-#include "ISettingsBase.h"
+#include "ISettingsGroup.h"
+#include "Setting.h"
 
 //******************************************************
 // Classes
 //******************************************************
 
-class SettingsBase : public ISettingsBase
+class SettingsGroup : public ISettingsGroup
 {
 protected:
     Preferences preferences;
 
     virtual void OnInit() = 0;
     virtual void OnSetDefault() = 0;
-    virtual void OnReload() = 0;
     virtual void OnSave() = 0;
     virtual void Print() {};
 
 public:
-    SettingsBase(const char *name) : ISettingsBase(name) {}
-
-    virtual bool HasChanged() = 0;
+    SettingsGroup(const char *name) : ISettingsGroup(name) {}
 
     virtual bool Init() override;
     virtual bool SetDefault() override;
-    virtual bool Reload() override;
     virtual bool Save(bool forceSave = false) override;
     virtual void Update() override {}
 };
