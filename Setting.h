@@ -80,7 +80,7 @@ public:
         }
     }
 
-    T Value() { return value; };
+    T Value() const { return value; };
     void Value(T value)
     {
         // TODO I really don't like this ... But in some cases (Brushes) value.Equals is not working
