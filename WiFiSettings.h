@@ -5,6 +5,7 @@
 //******************************************************
 
 #include <SettingsGroup.h>
+#include <string>
 
 //******************************************************
 // Classes
@@ -14,9 +15,9 @@ class WiFiSettings : public SettingsGroup
 {
 private:
     Setting<bool> enabled = Setting<bool>("enabled");
-    Setting<String> hostname = Setting<String>("hostname");
-    Setting<String> ssid = Setting<String>("ssid");
-    Setting<String> password = Setting<String>("password");
+    Setting<std::string> hostname = Setting<std::string>("hostname");
+    Setting<std::string> ssid = Setting<std::string>("ssid");
+    Setting<std::string> password = Setting<std::string>("password");
 
 protected:
     virtual void OnInit() override;
@@ -26,13 +27,13 @@ protected:
     virtual void Print() override;
 
 public:
-    WiFiSettings(const char *name, bool defaultEnabled = false, String defaultHostname = String(), String defaultSsid = String(), String defaultPassword = String());
+    WiFiSettings(const char *name, bool defaultEnabled = false, std::string defaultHostname = std::string(), std::string defaultSsid = std::string(), std::string defaultPassword = std::string());
 
     Setting<bool>& Enabled() { return enabled; }
 
     bool Valid();
 
-    Setting<String>& Hostname() { return hostname; }
-    Setting<String>& Ssid() { return ssid; }
-    Setting<String>& Password() { return password; }
+    Setting<std::string>& Hostname() { return hostname; }
+    Setting<std::string>& Ssid() { return ssid; }
+    Setting<std::string>& Password() { return password; }
 };

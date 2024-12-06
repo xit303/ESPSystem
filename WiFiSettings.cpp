@@ -8,7 +8,7 @@
 // Public Methods
 //******************************************************
 
-WiFiSettings::WiFiSettings(const char *name, bool defaultEnabled, String defaultHostname, String defaultSsid, String defaultPassword)
+WiFiSettings::WiFiSettings(const char *name, bool defaultEnabled, std::string defaultHostname, std::string defaultSsid, std::string defaultPassword)
     : SettingsGroup(name)
 {
     this->enabled.DefaultValue(defaultEnabled);
@@ -27,9 +27,9 @@ WiFiSettings::WiFiSettings(const char *name, bool defaultEnabled, String default
 
 bool WiFiSettings::Valid()
 {
-    String host = hostname;
-    String ssi = ssid;
-    if (host.isEmpty() || !ssi.isEmpty())
+    std::string host = hostname;
+    std::string ssi = ssid;
+    if (host.empty() || !ssi.empty())
         return false;
 
     // we do not check the password because it can be empty on an open network
@@ -46,16 +46,16 @@ void WiFiSettings::OnInit()
     enabled.LoadedValue(b);
     settings.push_back(&enabled);
 
-    String s = preferences.getString(hostname.Name(), hostname.DefaultValue());
-    hostname.LoadedValue(s);
+    String s = preferences.getString(hostname.Name(), hostname.DefaultValue().c_str());
+    hostname.LoadedValue(s.c_str());
     settings.push_back(&hostname);
 
-    s = preferences.getString(ssid.Name(), ssid.DefaultValue());
-    ssid.LoadedValue(s);
+    s = preferences.getString(ssid.Name(), ssid.DefaultValue().c_str());
+    ssid.LoadedValue(s.c_str());
     settings.push_back(&ssid);
 
-    s = preferences.getString(password.Name(), password.DefaultValue());
-    password.LoadedValue(s);
+    s = preferences.getString(password.Name(), password.DefaultValue().c_str());
+    password.LoadedValue(s.c_str());
     settings.push_back(&password);
 
     Print();
@@ -78,17 +78,17 @@ void WiFiSettings::OnSave()
 
     if (hostname.HasChanged())
     {
-        preferences.putString(hostname.Name(), hostname);
+        preferences.putString(hostname.Name(), hostname.Value().c_str());
     }
 
     if (ssid.HasChanged())
     {
-        preferences.putString(ssid.Name(), ssid);
+        preferences.putString(ssid.Name(), ssid.Value().c_str());
     }
 
     if (password.HasChanged())
     {
-        preferences.putString(password.Name(), password);
+        preferences.putString(password.Name(), password.Value().c_str());
     }
 
     Print();
@@ -97,14 +97,14 @@ void WiFiSettings::OnSave()
 void WiFiSettings::Print()
 {
     Serial.print("Enabled: ");
-    Serial.println(enabled);
+    Serial.println(enabled.Value());
 
     Serial.print("Hostname: ");
-    Serial.println(hostname);
+    Serial.println(hostname.Value().c_str());
 
     Serial.print("Ssid: ");
-    Serial.println(ssid);
+    Serial.println(ssid.Value().c_str());
 
     Serial.print("Password: ");
-    Serial.println(password);
+    Serial.println(password.Value().c_str());
 }
